@@ -1,0 +1,55 @@
+server:
+  port : 8082
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  main:
+    allow-circular-references: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: root
+    #����host ���Բ�����,ʹ��serverĬ��host
+    virtual-host: Lx
+    publisher-confirm-type: correlated #配置消息确认
+    publisher-returns: true #必须设置为true，否则消息消息路由失败也无法触发Return回调
+    template:
+      #开启mandatory: true, basic.return方法将消息返还给生产者
+      mandatory: true
+    listener:
+      simple:
+        # 手动应答
+        acknowledge-mode: manual
+        # 最少消费者数量
+        concurrency: 1
+        # 最多消费者数量
+        max-concurrency: 10
+        # 支持重试
+        retry:
+          enabled: true
+          max-attempts: 5 #最大重试次数
+          initial-interval : 3000ms #重试间隔时间 3秒
+        default-requeue-rejected: false #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
+  profiles:
+    active : crawler
+logging:
+  config:  classpath:log4j.yml
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+        group: my-producer-group
+
+        #目的地（topic:tag）
+        #topic
+        topic: anran-topic
+        #sync tag(同步消息tag)
+        sync-tag: syn
+        #async tag(异步消息tag)
+        async-tag: asyn
+        #oneway tag(单向消息tag)
+        oneway-tag: way
+    # 异步消息发送失败重试次数,默认为2
+        retry-times-when-send-async-failed: 2
+    # 消息发送失败重试次数,默认为2
+        retry-times-when-send-failed: 2

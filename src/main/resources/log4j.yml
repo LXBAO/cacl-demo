@@ -1,0 +1,15 @@
+log4j:
+  rootLogger : INFO,Console,File
+  appender :
+    Console: org.apache.log4j.ConsoleAppender
+      Target: System.out
+      layout : org.apache.log4j.PatternLayout
+        ConversionPattern: [%p] [%d{yyyy-MM-dd HH\:mm\:ss}][%c - %L]%m%n
+
+  File :
+    org.apache.log4j.RollingFileAppender
+    File : C:/jar/info.log
+    MaxFileSize : 10MB
+    Threshold : ALL
+    layout : org.apache.log4j.PatternLayout
+      ConversionPattern : [%p] [%d{yyyy-MM-dd HH\:mm\:ss}][%c - %L]%m%n
